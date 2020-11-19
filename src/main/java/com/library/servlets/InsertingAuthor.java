@@ -17,6 +17,8 @@ import java.util.Scanner;
 public class InsertingAuthor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         try {
 
             StringBuilder content = new StringBuilder();
@@ -26,8 +28,8 @@ public class InsertingAuthor extends HttpServlet {
                 }
             }
             Gson gson = new Gson();
-            System.out.println(gson.toJson(new Author(1, "name", "sname", Date.valueOf(LocalDate.now().minusDays(1000)), Date.valueOf(LocalDate.now()),
-                    new Address("country", "city"))).toString());
+            System.out.println(gson.toJson(new Author(1, "name", "sname", LocalDate.now().minusDays(1000), LocalDate.now(),
+                    new Address("country", "city"))));
 
             System.out.println(content.toString());
             Author aut = gson.fromJson(content.toString(), Author.class);

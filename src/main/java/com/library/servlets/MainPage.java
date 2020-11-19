@@ -35,7 +35,7 @@ public class MainPage extends HttpServlet {
         if(result != null) {
             try {
                 while (result.next()) {
-                    Date date = result.getDate("BIRTH_DATE");
+                    LocalDate date = result.getDate("BIRTH_DATE").toLocalDate();
                     System.out.println("Result:  " +  result);
                     authors.add(new Author(result.getInt("AUTHOR_ID"), result.getString("name"), result.getString("surname"),
                             date, null,

@@ -1,4 +1,5 @@
 com\library\servlets\HomePage.class
+com\library\servlets\InsertingAuthor.class
 com\library\db\DBConnection.class
 com\library\author\Author.class
 com\library\author\Person.class

@@ -1,7 +1,7 @@
 package com.library.db;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
-import com.mysql.jdbc.Driver;
+//import com.mysql.jdbc.Driver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,8 +59,8 @@ public final class DBConnection {
     private static void connect() {
         setConnectionUrl();
         try {
-            DriverManager.registerDriver(new Driver());
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library", "root", "kkk434544");
+            connection = DriverManager.getConnection(url, userName, password);
+//            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library", "root", "kkk434544");
 //        (url, userName, password);
         } catch (SQLException e) {
             e.printStackTrace();

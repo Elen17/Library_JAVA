@@ -1,11 +1,13 @@
 package com.library.author;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 
 public abstract class Person implements Comparable<Person> {
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private static final StringBuilder builder;
 
     static {
@@ -15,11 +17,11 @@ public abstract class Person implements Comparable<Person> {
     private final int id;
     private final String name;
     private final String surname;
-    private final Date birthDate;
-    private final Date deathDate;//can be null
+    private final LocalDate birthDate;
+    private final LocalDate deathDate;//can be null
     private final Address address;//not null, immutable
 
-    public Person(int id, String name, String surname, Date birthDate, Date deathDate, Address address) {
+    public Person(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) {
         this.name = Objects.requireNonNull(name);
         this.surname = Objects.requireNonNull(surname);
         this.birthDate = Objects.requireNonNull(birthDate);
@@ -28,16 +30,16 @@ public abstract class Person implements Comparable<Person> {
         this.id = id;
     }
 
-    private static int calculateAge(Date birthDate, Date currentDate) {
+    private static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
         int age = currentDate.getYear() - birthDate.getYear() - 1;
-        if (birthDate.getMonth() < currentDate.getMonth() && birthDate.getDate() < currentDate.getDate()) {
+        if (birthDate.getMonthValue() < currentDate.getMonthValue() && birthDate.getDayOfMonth() < currentDate.getDayOfMonth()) {
             ++age;
         }
         return age;
     }
 
     public int getAge() {
-        return this.deathDate == null ? calculateAge(birthDate, Date.valueOf(LocalDate.now())) : calculateAge(birthDate, deathDate);
+        return this.deathDate == null ? calculateAge(birthDate, LocalDate.now()) : calculateAge(birthDate, deathDate);
     }
 
     public String getName() {
@@ -48,11 +50,11 @@ public abstract class Person implements Comparable<Person> {
         return surname;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public Date getDeathDate() {
+    public LocalDate getDeathDate() {
         return deathDate;
     }
 
@@ -101,5 +103,5 @@ public abstract class Person implements Comparable<Person> {
                 ", deathDate=" + deathDate +
                 ", address=" + address +
                 '}';
-    }sql
+    }
 }

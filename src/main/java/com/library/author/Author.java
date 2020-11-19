@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public final class Author extends Person implements Cloneable {
     private Map<Integer, Book> books;
 
-    public Author(int id, String name, String surname, Date birthDate, Date deathDate, Address address) throws SQLException {
+    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) throws SQLException {
         super(id, name, surname, birthDate, deathDate, address);
         this.books  = completeBooks();
     }
