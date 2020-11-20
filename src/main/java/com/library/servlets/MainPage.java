@@ -16,7 +16,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainPage extends HttpServlet {
     private static DBConnection connection = DBConnection.getInstance();
@@ -25,29 +27,29 @@ public class MainPage extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         String name = req.getParameter("query");
-        ResultSet result = null;
+        Map<Integer, Author> authors = new HashMap<>();
         try {
-            result = connection.passQuery(String.format("SELECT * FROM %s WHERE NAME='%s'", "AUTHOR", name));
+            authors = connection.getAuthorsByName(name);
+//                    passQuery(String.format("SELECT * FROM %s WHERE NAME='%s'", "AUTHOR", name));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        List<Author> authors = new ArrayList<>();
-        if(result != null) {
-            try {
-                while (result.next()) {
-                    LocalDate date = result.getDate("BIRTH_DATE").toLocalDate();
-                    System.out.println("Result:  " +  result);
-                    authors.add(new Author(result.getInt("AUTHOR_ID"), result.getString("name"), result.getString("surname"),
-                            date, null,
-                            new Address(result.getString("BIRTH_COUNTRY"), result.getString("BIRTH_City"))));
-
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+//        if(result != null) {
+//            try {
+//                while (result.next()) {
+//                    LocalDate date = result.getDate("BIRTH_DATE").toLocalDate();
+//                    System.out.println("Result:  " +  result);
+//                    authors.add(new Author(result.getInt("AUTHOR_ID"), result.getString("name"), result.getString("surname"),
+//                            date, null,
+//                            new Address(result.getString("BIRTH_COUNTRY"), result.getString("BIRTH_City"))));
+//
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
         System.out.println("Authors: " + authors);
-        String obj = new Gson().toJson(authors);
+        String obj = new Gson().toJson(new ArrayList<>(authors.values()));
         resp.getWriter().print(obj);
     }
 }

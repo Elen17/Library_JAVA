@@ -33,4 +33,13 @@
         <servlet-name>InsertAuthor</servlet-name>
         <url-pattern>/library/insert/author</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteAuthor</servlet-name>
+        <servlet-class>com.library.servlets.DeleteAuthor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteAuthor</servlet-name>
+        <url-pattern>/library/delete/author</url-pattern>
+    </servlet-mapping>
 </web-app>
