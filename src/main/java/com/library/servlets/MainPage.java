@@ -2,26 +2,22 @@ package com.library.servlets;
 
 
 import com.google.gson.Gson;
-import com.library.author.Address;
 import com.library.author.Author;
-import com.library.db.DBConnection;
+import com.library.db.DBConnectionMySQL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MainPage extends HttpServlet {
-    private static DBConnection connection = DBConnection.getInstance();
+//    private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.addHeader("Access-Control-Allow-Origin", "*");
@@ -29,25 +25,13 @@ public class MainPage extends HttpServlet {
         String name = req.getParameter("query");
         Map<Integer, Author> authors = new HashMap<>();
         try {
-            authors = connection.getAuthorsByName(name);
+//            authors = DBConnectionMSSQL.getInstance().getAuthorsByName(name);// work:
+            authors = DBConnectionMySQL.getInstance().getAuthorsByName(name);
 //                    passQuery(String.format("SELECT * FROM %s WHERE NAME='%s'", "AUTHOR", name));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        if(result != null) {
-//            try {
-//                while (result.next()) {
-//                    LocalDate date = result.getDate("BIRTH_DATE").toLocalDate();
-//                    System.out.println("Result:  " +  result);
-//                    authors.add(new Author(result.getInt("AUTHOR_ID"), result.getString("name"), result.getString("surname"),
-//                            date, null,
-//                            new Address(result.getString("BIRTH_COUNTRY"), result.getString("BIRTH_City"))));
-//
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
+
         System.out.println("Authors: " + authors);
         String obj = new Gson().toJson(new ArrayList<>(authors.values()));
         resp.getWriter().print(obj);

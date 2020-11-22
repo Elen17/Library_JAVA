@@ -1,9 +1,10 @@
 package com.library.author;
 
 import com.library.book.Book;
-import com.library.db.DBConnection;
+import com.library.db.DBConnectionMSSQL;
+import com.library.db.DBConnectionMySQL;
 
-import java.sql.Date;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 
 public final class Author extends Person implements Cloneable {
     private Map<Integer, Book> books;
+    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
+//    private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
-    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) throws SQLException {
-        super(id, name, surname, birthDate, deathDate, address);
-        this.books  = completeBooks();
+    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, String country, String city) throws SQLException {
+        super(id, name, surname, birthDate, deathDate, country, city);
+        this.books = completeBooks();
     }
 
 
@@ -31,7 +34,7 @@ public final class Author extends Person implements Cloneable {
     }
 
     public List<Book> getBooks() throws SQLException {
-        if(this.books == null){
+        if (this.books == null) {
             this.books = completeBooks();
         }
         List<Book> bookList = new ArrayList<>();
@@ -59,13 +62,13 @@ public final class Author extends Person implements Cloneable {
     private static Author cloneInstance(Author author) throws SQLException {
         Map<Integer, Book> books = author.getBooks().stream().collect(Collectors.toMap(Book::getID, book -> book)); //todo:  book -> book
         //        newAuthor.setBooks(books);
-        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate(), author.getDeathDate(), author.getAddress());
+        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate(), author.getDeathDate(), author.getAddress().getCountry(), author.getAddress().getCity());
     }
 
     private Map<Integer, Book> completeBooks() throws SQLException {
-        ResultSet books = DBConnection.getInstance()
+        ResultSet books = connection
                 .passQuery(String.format("select * from BOOK inner join BOOK_AUTHORS on BOOK.BOOK_ID = BOOK_AUTHORS.BOOK_ID" +
-                        " where author_id = " +  this.getId()));
+                        " where author_id = " + this.getId()));
         Map<Integer, Book> result = new HashMap<>();
         if (books != null) {
             while (books.next()) {
@@ -88,4 +91,6 @@ public final class Author extends Person implements Cloneable {
         sb.append('}');
         return sb.toString();
     }
+
+
 }

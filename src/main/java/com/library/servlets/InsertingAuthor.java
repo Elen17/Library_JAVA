@@ -1,9 +1,8 @@
 package com.library.servlets;
 
 import com.google.gson.Gson;
-import com.library.author.Address;
 import com.library.author.Author;
-import com.library.db.DBConnection;
+import com.library.db.DBConnectionMySQL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class InsertingAuthor extends HttpServlet {
@@ -28,26 +26,17 @@ public class InsertingAuthor extends HttpServlet {
                 }
             }
             Gson gson = new Gson();
-            System.out.println(gson.toJson(new Author(1, "name", "sname", LocalDate.now().minusDays(1000), LocalDate.now(),
-                    new Address("country", "city"))));
 
             System.out.println(content.toString());
             Author author = gson.fromJson(content.toString(), Author.class);
-//        String parameter = req.getParameter("author");
-            System.out.println("Success: " + DBConnection.getInstance().insertAuthor(author));
-//        System.out.println(parameter);
+            System.out.println(author.getAddress().getCountry());
+            boolean succeed = DBConnectionMySQL.getInstance().insertAuthor(author);
+//        boolean succeed = DBConnectionMSSQL.getInstance().insertAuthor(author));
+            System.out.println(succeed);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        System.out.println(req.getQueryString());
-        System.out.println(req.getRequestURI());
-        resp.getWriter().write("wirte");
-//        String parameter = req.getParameter("author");
-//        System.out.println(parameter);
-    }
 }
