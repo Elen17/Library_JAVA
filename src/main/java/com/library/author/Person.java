@@ -1,5 +1,6 @@
 package com.library.author;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -20,12 +21,12 @@ public abstract class Person implements Comparable<Person> {
     private final LocalDate deathDate;//can be null
     private final Address address;//not null, immutable
 
-    public Person(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, String country, String city) {
+    public Person(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) {
         this.name = Objects.requireNonNull(name);
         this.surname = Objects.requireNonNull(surname);
         this.birthDate = Objects.requireNonNull(birthDate);
         this.deathDate = deathDate;
-        this.address = Objects.requireNonNull(new Address(country, city));
+        this.address = Objects.requireNonNull(address);
         this.id = id;
     }
 
@@ -103,5 +104,6 @@ public abstract class Person implements Comparable<Person> {
                 ", address=" + address +
                 '}';
     }
+
 
 }

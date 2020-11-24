@@ -109,7 +109,7 @@ public final class DBConnectionMSSQL {
             System.out.println("Result:  " + result);
             return new Author(result.getInt("id"), result.getString("name"), result.getString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    result.getString("country"), result.getString("city"));
+                    new Address(result.getString("country"), result.getString("city")));
 
         }
         return null;
@@ -129,7 +129,7 @@ public final class DBConnectionMSSQL {
             int id = result.getInt("id");
             authors.put(id, new Author(id, result.getString("name"), result.getString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    result.getString("country"), result.getString("city")));
+                    new Address(result.getString("country"), result.getString("city"))));
 
         }
         return authors;
