@@ -30,5 +30,9 @@ public class DeleteAuthor extends HttpServlet {
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04c1a5a5b684218f4ba66bad2cd684212603c336
     }
 }

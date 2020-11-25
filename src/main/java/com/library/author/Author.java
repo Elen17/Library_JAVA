@@ -19,8 +19,8 @@ public final class Author extends Person implements Cloneable {
 //    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
     private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
-    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, String country, String city) throws SQLException {
-        super(id, name, surname, birthDate, deathDate, country, city);
+    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) throws SQLException {
+        super(id, name, surname, birthDate, deathDate, address);
         this.books = completeBooks();
     }
 
@@ -62,7 +62,7 @@ public final class Author extends Person implements Cloneable {
     private static Author cloneInstance(Author author) throws SQLException {
         Map<Integer, Book> books = author.getBooks().stream().collect(Collectors.toMap(Book::getID, book -> book)); //todo:  book -> book
         //        newAuthor.setBooks(books);
-        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate(), author.getDeathDate(), author.getAddress().getCountry(), author.getAddress().getCity());
+        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate(), author.getDeathDate(), author.getAddress());
     }
 
     private Map<Integer, Book> completeBooks() throws SQLException {

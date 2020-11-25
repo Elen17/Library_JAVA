@@ -28,8 +28,9 @@ public class InsertingAuthor extends HttpServlet {
             }
             Gson gson = new Gson();
 
-            System.out.println(content.toString());
+            System.out.println(gson.fromJson(content.toString(), Author.class));
             Author author = gson.fromJson(content.toString(), Author.class);
+            System.out.println("Converting to Author");
             System.out.println(author.getAddress().getCountry());
 //            boolean succeed = DBConnectionMySQL.getInstance().insertAuthor(author);
         boolean succeed = DBConnectionMSSQL.getInstance().insertAuthor(author);
@@ -39,5 +40,6 @@ public class InsertingAuthor extends HttpServlet {
             e.printStackTrace();
         }
     }
+
 
 }

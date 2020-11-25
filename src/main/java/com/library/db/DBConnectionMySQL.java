@@ -1,4 +1,6 @@
-package com.library.db;
+
+
+        package com.library.db;
 
 import com.library.author.Address;
 import com.library.author.Author;
@@ -40,11 +42,19 @@ public final class DBConnectionMySQL {
 
     private static final String INSERT_AUTHOR = "INSERT INTO library.AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
+<<<<<<< HEAD
     private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
             "            WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
             "                FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
             "                WHERE AUTHOR.AUTHOR_ID = ?) " +
             "             DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
+=======
+    private static final String DELETE_AUTHOR = "DELETE_AUTHOR = DELETE  FROM BOOK WHERE BOOK_ID IN (" +
+            "          SELECT AB.BOOK_ID FROM AUTHOR AS A INNER JOIN BOOK_AUTHORS AS AB " +
+            "                        ON A.AUTHOR_ID = AB.AUTHOR_ID" +
+            "                     WHERE A.AUTHOR_ID = ? ); " +
+            "         DELETE FROM library.AUTHOR WHERE AUTHOR_ID = ? ";
+>>>>>>> 04c1a5a5b684218f4ba66bad2cd684212603c336
 
     public static DBConnectionMySQL getInstance() {
         if (instance == null) {
@@ -99,7 +109,7 @@ public final class DBConnectionMySQL {
             System.out.println("Result:  " + result);
             return new Author(result.getInt("id"), result.getString("name"), result.getString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    result.getString("country"), result.getString("city"));
+                    new Address(result.getString("country"), result.getString("city")));
 
         }
         return null;
@@ -121,7 +131,7 @@ public final class DBConnectionMySQL {
             int id = result.getInt("id");
             authors.put(id, new Author(id, result.getString("name"), result.getString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    result.getString("country"), result.getString("city")));
+                    new Address(result.getString("country"), result.getString("city"))));
 //
 //            LocalDate birthDate = result.getDate("BIRTH_DATE").toLocalDate();
 //            Date deathDate = result.getDate("DEATH_YEAR");
