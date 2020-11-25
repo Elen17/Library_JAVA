@@ -42,19 +42,19 @@ public final class DBConnectionMySQL {
 
     private static final String INSERT_AUTHOR = "INSERT INTO library.AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
-<<<<<<< HEAD
+
     private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
             "            WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
             "                FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
             "                WHERE AUTHOR.AUTHOR_ID = ?) " +
             "             DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
-=======
-    private static final String DELETE_AUTHOR = "DELETE_AUTHOR = DELETE  FROM BOOK WHERE BOOK_ID IN (" +
-            "          SELECT AB.BOOK_ID FROM AUTHOR AS A INNER JOIN BOOK_AUTHORS AS AB " +
-            "                        ON A.AUTHOR_ID = AB.AUTHOR_ID" +
-            "                     WHERE A.AUTHOR_ID = ? ); " +
-            "         DELETE FROM library.AUTHOR WHERE AUTHOR_ID = ? ";
->>>>>>> 04c1a5a5b684218f4ba66bad2cd684212603c336
+//
+//    private static final String DELETE_AUTHOR_1 = "DELETE_AUTHOR = DELETE  FROM BOOK WHERE BOOK_ID IN (" +
+//            "          SELECT AB.BOOK_ID FROM AUTHOR AS A INNER JOIN BOOK_AUTHORS AS AB " +
+//            "                        ON A.AUTHOR_ID = AB.AUTHOR_ID" +
+//            "                     WHERE A.AUTHOR_ID = ? ); " +
+//            "         DELETE FROM library.AUTHOR WHERE AUTHOR_ID = ? ";
+
 
     public static DBConnectionMySQL getInstance() {
         if (instance == null) {
