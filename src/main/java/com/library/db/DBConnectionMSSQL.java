@@ -46,7 +46,11 @@ public final class DBConnectionMSSQL {
 
     private static final String INSERT_AUTHOR = "INSERT INTO AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
-    private static final String DELETE_AUTHOR = "DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
+    private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
+            "WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
+            "    FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
+            "    WHERE AUTHOR.AUTHOR_ID = ?) " +
+            " DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
 
     public static DBConnectionMSSQL getInstance() {
 
@@ -181,6 +185,7 @@ public final class DBConnectionMSSQL {
     public boolean deleteAuthor(int id) throws SQLException {
         deleteAuthor = createPrepStatement(deleteAuthor, DELETE_AUTHOR);
         deleteAuthor.setInt(1, id);
+        deleteAuthor.setInt(2, id);
         return deleteAuthor.executeUpdate() == 1;
     }
 

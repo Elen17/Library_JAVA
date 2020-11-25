@@ -40,7 +40,11 @@ public final class DBConnectionMySQL {
 
     private static final String INSERT_AUTHOR = "INSERT INTO library.AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
-    private static final String DELETE_AUTHOR = "DELETE FROM library.AUTHOR WHERE AUTHOR_ID = ? ";
+    private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
+            "            WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
+            "                FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
+            "                WHERE AUTHOR.AUTHOR_ID = ?) " +
+            "             DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
 
     public static DBConnectionMySQL getInstance() {
         if (instance == null) {
@@ -68,6 +72,7 @@ public final class DBConnectionMySQL {
             }
 
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library", "root", "kkk434544");
+
             getAuthorByID = connection.prepareStatement(GET_AUTHOR);
             getAuthorByName = connection.prepareStatement(GET_AUTHOR_NAME);
             getBookByID = connection.prepareStatement(GET_BOOK);

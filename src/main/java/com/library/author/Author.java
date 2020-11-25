@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 public final class Author extends Person implements Cloneable {
     private Map<Integer, Book> books;
-    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
-//    private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
+//    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
+    private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
     public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, String country, String city) throws SQLException {
         super(id, name, surname, birthDate, deathDate, country, city);

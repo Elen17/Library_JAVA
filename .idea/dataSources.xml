@@ -13,5 +13,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/library</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="Library@localhost [2]" uuid="5a03cdbb-a4aa-4429-9d01-d7ce0c9dffd3">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://localhost:1433;database=Library</jdbc-url>
+    </data-source>
   </component>
 </project>

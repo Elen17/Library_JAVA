@@ -3,6 +3,7 @@ package com.library.servlets;
 
 import com.google.gson.Gson;
 import com.library.author.Author;
+import com.library.db.DBConnectionMSSQL;
 import com.library.db.DBConnectionMySQL;
 
 import javax.servlet.ServletException;
@@ -25,8 +26,8 @@ public class MainPage extends HttpServlet {
         String name = req.getParameter("query");
         Map<Integer, Author> authors = new HashMap<>();
         try {
-//            authors = DBConnectionMSSQL.getInstance().getAuthorsByName(name);// work:
-            authors = DBConnectionMySQL.getInstance().getAuthorsByName(name);
+            authors = DBConnectionMSSQL.getInstance().getAuthorsByName(name);// work:
+//            authors = DBConnectionMySQL.getInstance().getAuthorsByName(name);
 //                    passQuery(String.format("SELECT * FROM %s WHERE NAME='%s'", "AUTHOR", name));
         } catch (SQLException e) {
             e.printStackTrace();
