@@ -11,10 +11,9 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 //import com.mysql.jdbc.Driver;
 
@@ -31,6 +30,7 @@ public final class DBConnectionMSSQL {
     private static PreparedStatement getBookByTitle;
     private static PreparedStatement insertAuthor;
     private static PreparedStatement deleteAuthor;
+    private static PreparedStatement getAuthorNames;
     private static final String GET_AUTHOR = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as coutry, BIRTH_CITY as city\n" +
             "from AUTHOR where author_id = ? ";
 
@@ -51,6 +51,8 @@ public final class DBConnectionMSSQL {
             "    FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
             "    WHERE AUTHOR.AUTHOR_ID = ?) " +
             " DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
+
+    private static final String GET_AUTHORS_NAMES = "SELECT NAME FROM AUTHOR";
 
     public static DBConnectionMSSQL getInstance() {
 
@@ -189,8 +191,21 @@ public final class DBConnectionMSSQL {
         return deleteAuthor.executeUpdate() == 1;
     }
 
+    public List<String> getAuthorsNames() throws SQLException{
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(GET_AUTHORS_NAMES);
+        List<String> names  = new ArrayList<>();
+        while (result.next()){
+            names.add(result.getString(1));
+        }
+        return names;
+
+    }
+
     private PreparedStatement createPrepStatement(PreparedStatement statement, String sql) throws SQLException {
         return statement == null ? connection.prepareStatement(sql) : statement;
     }
+
+
 
 }

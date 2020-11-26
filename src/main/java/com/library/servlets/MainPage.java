@@ -27,8 +27,6 @@ public class MainPage extends HttpServlet {
         Map<Integer, Author> authors = new HashMap<>();
         try {
             authors = DBConnectionMSSQL.getInstance().getAuthorsByName(name);// work:
-//            authors = DBConnectionMySQL.getInstance().getAuthorsByName(name);
-//                    passQuery(String.format("SELECT * FROM %s WHERE NAME='%s'", "AUTHOR", name));
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -12,6 +12,10 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
+        <url-pattern>/library/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Home</servlet-name>
         <url-pattern>/library</url-pattern>
     </servlet-mapping>
 
