@@ -20,7 +20,7 @@ public class MainPage extends HttpServlet {
 //    private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         String name = req.getParameter("query");
@@ -33,6 +33,7 @@ public class MainPage extends HttpServlet {
 
         System.out.println("Authors: " + authors);
         String obj = new Gson().toJson(new ArrayList<>(authors.values()));
+        System.out.println("JSON: " + obj);
         resp.getWriter().print(obj);
     }
 }

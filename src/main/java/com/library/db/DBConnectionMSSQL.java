@@ -4,6 +4,8 @@ import com.library.author.Address;
 import com.library.author.Author;
 import com.library.book.Book;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+import com.sun.scenario.effect.impl.prism.PrImage;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +32,34 @@ public final class DBConnectionMSSQL {
     private static PreparedStatement getBookByTitle;
     private static PreparedStatement insertAuthor;
     private static PreparedStatement deleteAuthor;
-    private static PreparedStatement getAuthorNames;
+    private static PreparedStatement updateAuthor;
+    private static PreparedStatement updateBook;
+
+    private static final String UPDATE_BOOK = "UPDATE BOOK " +
+            "SET TITLE = ?, " +
+            "    BOOK_YEAR = ? , " +
+            "    BOOK_INFO = ? , " +
+            "    COUNTRY = ? , " +
+            "    page_count = ? " +
+            "WHERE BOOK_ID = ?; ";
+
+    private static final String UPDATE_AUTHOR = "UPDATE AUTHOR " +
+            "SET NAME = ?, SURNAME = ? ,  BIRTH_DATE = ?, " +
+            "DEATH_YEAR = ?, " +
+            "BIRTH_COUNTRY = ?, " +
+            "BIRTH_CITY = ?  " +
+            "WHERE AUTHOR_ID = ?;";
+    private static final String GET_ALL_BOOKS = "select b.BOOK_ID, b.TITLE, " +
+            "b.BOOK_YEAR as year, b.COUNTRY, b.page_count, a.NAME as name, a.SURNAME as sname " +
+            " from book as b inner join BOOK_AUTHORS as ba " +
+            "    on b.BOOK_ID = ba.BOOK_ID inner join AUTHOR A on ba.AUTHOR_ID = A.AUTHOR_ID ";
+    private static final String GET_ALL_AUTHORS = "SELECT AUTHOR_ID as ID, " +
+            "NAME, " +
+            "SURNAME, " +
+            "BIRTH_DATE AS BIRTH, " +
+            "DEATH_YEAR AS DEATH, " +
+            "BIRTH_COUNTRY AS COUNTRY, " +
+            "BIRTH_CITY AS CITY FROM AUTHOR ";
     private static final String GET_AUTHOR = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as coutry, BIRTH_CITY as city\n" +
             "from AUTHOR where author_id = ? ";
 
@@ -47,10 +76,10 @@ public final class DBConnectionMSSQL {
     private static final String INSERT_AUTHOR = "INSERT INTO AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
     private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
-            "WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
-            "    FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
-            "    WHERE AUTHOR.AUTHOR_ID = ?) " +
-            " DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
+            "   WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
+            "        FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
+            "     WHERE AUTHOR.AUTHOR_ID = ?) " +
+            "     DELETE FROM AUTHOR WHERE AUTHOR_ID = ?  ";
 
     private static final String GET_AUTHORS_NAMES = "SELECT NAME FROM AUTHOR";
 
@@ -133,11 +162,13 @@ public final class DBConnectionMSSQL {
             Date deathDate = result.getDate("dy");
             System.out.println("Result:  " + result);
             int id = result.getInt("id");
-            authors.put(id, new Author(id, result.getString("name"), result.getString("surname"),
+            authors.put(id, new Author(id, result.getNString("name"), result.getNString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
                     new Address(result.getString("country"), result.getString("city"))));
 
         }
+
+        System.out.println(authors);
         return authors;
     }
 
@@ -173,8 +204,8 @@ public final class DBConnectionMSSQL {
 
     public boolean insertAuthor(Author author) throws SQLException {
         insertAuthor = createPrepStatement(insertAuthor, INSERT_AUTHOR);
-        insertAuthor.setString(1, author.getName());
-        insertAuthor.setString(2, author.getSurname());
+        insertAuthor.setNString(1, author.getName());
+        insertAuthor.setNString(2, author.getSurname());
         insertAuthor.setDate(3, Date.valueOf(author.getBirthDate()));
         insertAuthor.setDate(4, author.getDeathDate() == null ? null : Date.valueOf(author.getDeathDate()));
         insertAuthor.setString(5, author.getAddress().getCountry());
@@ -191,21 +222,61 @@ public final class DBConnectionMSSQL {
         return deleteAuthor.executeUpdate() == 1;
     }
 
-    public List<String> getAuthorsNames() throws SQLException{
+    public List<String> getAuthorsNames() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(GET_AUTHORS_NAMES);
-        List<String> names  = new ArrayList<>();
-        while (result.next()){
+        List<String> names = new ArrayList<>();
+        while (result.next()) {
             names.add(result.getString(1));
         }
         return names;
 
     }
 
+    public List<Author> getAllAuthors() throws SQLException {
+        List<Author> result = new ArrayList<>();
+        Statement getAuthors = connection.createStatement();
+        ResultSet authors = getAuthors.executeQuery(GET_ALL_AUTHORS);
+        while (authors.next()) {
+            result.add(new Author(authors.getInt("ID"), authors.getString("name"),
+                    authors.getString("surname"), authors.getDate("birth").toLocalDate(),
+                    (authors.getDate("death") != null ? authors.getDate("death").toLocalDate() : null),
+                    new Address(authors.getString("country"), authors.getString("city"))));
+        }
+
+        System.out.println("Result: " + result);
+        return result;
+    }
+
+    public List<Book> getAllBooks() throws SQLException {
+        List<Book> result = new ArrayList<>();
+        Statement getBooks = connection.createStatement();
+        ResultSet books = getBooks.executeQuery(GET_ALL_BOOKS);
+        while (books.next()) {
+            result.add(new Book(books.getInt("ID"), books.getString("title"),
+                    books.getNString("name") + books.getNString("sname"),
+                    (short) books.getInt("page_count"),
+                    books.getString("country"),
+                    (short) books.getInt("year")));
+        }
+        return result;
+    }
+
+    public int updateAuthor(Author author) throws SQLException {
+        updateAuthor = createPrepStatement(updateAuthor, UPDATE_AUTHOR);
+        updateAuthor.setNString(1, author.getName());//name
+        updateAuthor.setNString(2, author.getSurname());//name
+        updateAuthor.setDate(3, Date.valueOf(author.getBirthDate()));//name
+        updateAuthor.setDate(4, author.getDeathDate() != null ? Date.valueOf(author.getDeathDate()) : null);//name
+        updateAuthor.setNString(5, author.getAddress().getCountry());//name
+        updateAuthor.setNString(6, author.getAddress().getCity());//name
+        updateAuthor.setInt(7, author.getId());//name
+        return updateAuthor.executeUpdate();
+    }
+
     private PreparedStatement createPrepStatement(PreparedStatement statement, String sql) throws SQLException {
         return statement == null ? connection.prepareStatement(sql) : statement;
     }
-
 
 
 }

@@ -9,12 +9,11 @@ import com.library.book.Book;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public final class DBConnectionMySQL {
+        public final class DBConnectionMySQL {
     private static Connection connection;
     private static final Path path = Paths.get("connection.properties");
     private static String url;
@@ -27,6 +26,21 @@ public final class DBConnectionMySQL {
     private static PreparedStatement getBookByTitle;
     private static PreparedStatement insertAuthor;
     private static PreparedStatement deleteAuthor;
+//    private static PreparedStatement getAllAuthors;
+//    private static PreparedStatement getAllBooks;
+
+    private static final String GET_ALL_BOOKS = "select b.BOOK_ID, b.TITLE, " +
+            "b.BOOK_YEAR as year, b.COUNTRY, b.page_count, a.NAME as name, a.SURNAME as sname " +
+            " from book as b inner join BOOK_AUTHORS as ba " +
+            "    on b.BOOK_ID = ba.BOOK_ID inner join AUTHOR A on ba.AUTHOR_ID = A.AUTHOR_ID ";
+    private static final String GET_ALL_AUTHORS = "SELECT AUTHOR_ID as ID, " +
+            "NAME, " +
+            "SURNAME, " +
+            "BIRTH_DATE AS BIRTH, " +
+            "DEATH_YEAR AS DEATH, " +
+            "BIRTH_COUNTRY AS COUNTRY " +
+            "BIRTH_CITY AS CITY FROM AUTHOR ";
+
     private static final String GET_AUTHOR = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as coutry, BIRTH_CITY as city from library.AUTHOR where author_id = ? ";
 
     private static final String GET_BOOK = "select B.BOOK_ID as id, B.TITLE as title, a.NAME as name, a.SURNAME as sname, b.PAGE_COUNT as page, b.COUNTRY as country, b.BOOK_YEAR as year " +
@@ -48,13 +62,6 @@ public final class DBConnectionMySQL {
             "                FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
             "                WHERE AUTHOR.AUTHOR_ID = ?) " +
             "             DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
-//
-//    private static final String DELETE_AUTHOR_1 = "DELETE_AUTHOR = DELETE  FROM BOOK WHERE BOOK_ID IN (" +
-//            "          SELECT AB.BOOK_ID FROM AUTHOR AS A INNER JOIN BOOK_AUTHORS AS AB " +
-//            "                        ON A.AUTHOR_ID = AB.AUTHOR_ID" +
-//            "                     WHERE A.AUTHOR_ID = ? ); " +
-//            "         DELETE FROM library.AUTHOR WHERE AUTHOR_ID = ? ";
-
 
     public static DBConnectionMySQL getInstance() {
         if (instance == null) {
@@ -191,6 +198,32 @@ public final class DBConnectionMySQL {
         deleteAuthor = createPrepStatement(deleteAuthor, DELETE_AUTHOR);
         deleteAuthor.setInt(1, id);
         return deleteAuthor.executeUpdate() == 1;
+    }
+
+    public List<Author> getAllAuthors() throws SQLException{
+        List<Author> result = new ArrayList<>();
+        Statement getAuthors = connection.createStatement();
+        ResultSet authors = getAuthors.executeQuery(GET_ALL_AUTHORS);
+        while (authors.next()){
+            result.add(new Author(authors.getInt("ID"), authors.getString("name"),
+                    authors.getString("surname"), authors.getDate("birth").toLocalDate(),
+                    authors.getDate("death").toLocalDate(),
+                    new Address(authors.getString("country"), authors.getString("city"))));
+        }
+        return result;
+    }
+    public List<Book> getAllBooks() throws SQLException{
+        List<Book> result = new ArrayList<>();
+        Statement getBooks = connection.createStatement();
+        ResultSet books = getBooks.executeQuery(GET_ALL_BOOKS);
+        while (books.next()){
+            result.add(new Book(books.getInt("ID"), books.getString("title"),
+                    books.getNString("name") + books.getNString("sname"),
+                    (short) books.getInt("page_count"),
+                    books.getString("country"),
+                    (short) books.getInt("year")));
+        }
+        return result;
     }
 
     private PreparedStatement createPrepStatement(PreparedStatement statement, String sql) throws SQLException {
