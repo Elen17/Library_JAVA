@@ -100,16 +100,20 @@ public final class DBConnectionMSSQL {
     }
 
     private static void setConnectionUrl() {
-        try (InputStream in = new FileInputStream("C:\\Users\\elen.khachatryan\\IdeaProjects\\Library\\src\\main\\resources\\connection.properties")) {
+        try {
+//        (InputStream in = new FileInputStream("src\\main\\resources\\connection.properties")) {
 //            System.out.println("Inside properties.");
             SQLServerDriver.register();
-            Properties prop = new Properties();
-            prop.load(in);
-            url = prop.getProperty("url");
-            userName = prop.getProperty("user");
-            password = prop.getProperty("password");
-
-        } catch (IOException | SQLException e) {
+//            Properties prop = new Properties();
+//            prop.load(in);
+//            url = prop.getProperty("url");
+//            userName = prop.getProperty("user");
+//            password = prop.getProperty("password");
+        url = "jdbc:sqlserver://localhost:1433;databaseName=Library";
+        userName = "lib_login";
+        password = "password";
+//
+        } catch ( SQLException e) {
             e.printStackTrace();
         }
     }

@@ -26,7 +26,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Main</servlet-name>
-        <url-pattern>/library/author</url-pattern>
+        <url-pattern>/library/author/*</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -55,4 +55,13 @@
         <servlet-name>EditAuthor</servlet-name>
         <url-pattern>/library/edit/author</url-pattern>
     </servlet-mapping>
+
+    <filter>
+        <filter-name>AddHeaders</filter-name>
+        <filter-class>com.library.servlets.Filter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AddHeaders</filter-name>
+        <url-pattern>/library</url-pattern>
+    </filter-mapping>
 </web-app>

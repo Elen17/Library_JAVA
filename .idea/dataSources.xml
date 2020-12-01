@@ -7,7 +7,7 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/library</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="Library@localhost" uuid="c0beebe2-279d-4cbb-a71a-13f86e5da5a8">
+    <data-source source="LOCAL" name="Library@localhost [2]" uuid="c3c81df1-2bd5-464c-a5ec-5a4f3983cd33">
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
