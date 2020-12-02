@@ -8,30 +8,30 @@
 
     <servlet>
         <servlet-name>Home</servlet-name>
-        <servlet-class>com.library.servlets.HomePage</servlet-class>
+        <servlet-class>com.library.servlets.main.HomePage</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>Home</servlet-name>
-        <url-pattern>/library/*</url-pattern>
-    </servlet-mapping>
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>Home</servlet-name>-->
+<!--        <url-pattern>/library/*</url-pattern>-->
+<!--    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/library</url-pattern>
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>Main</servlet-name>
-        <servlet-class>com.library.servlets.MainPage</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Main</servlet-name>
-        <url-pattern>/library/author</url-pattern>
-    </servlet-mapping>
+<!--    <servlet>-->
+<!--        <servlet-name>Main</servlet-name>-->
+<!--        <servlet-class>com.library.servlets.MainPage</servlet-class>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>Main</servlet-name>-->
+<!--        <url-pattern>/library/author/*</url-pattern>-->
+<!--    </servlet-mapping>-->
     
     <servlet>
         <servlet-name>InsertAuthor</servlet-name>
-        <servlet-class>com.library.servlets.InsertingAuthor</servlet-class>
+        <servlet-class>com.library.servlets.author.InsertingAuthor</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>InsertAuthor</servlet-name>
@@ -39,29 +39,47 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>deleteAuthor</servlet-name>
-        <servlet-class>com.library.servlets.DeleteAuthor</servlet-class>
+        <servlet-name>DeleteAuthor</servlet-name>
+        <servlet-class>com.library.servlets.author.DeleteAuthor</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>deleteAuthor</servlet-name>
+        <servlet-name>DeleteAuthor</servlet-name>
         <url-pattern>/library/delete/author</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>EditAuthor</servlet-name>
-        <servlet-class>com.library.servlets.EditAuthor</servlet-class>
+        <servlet-class>com.library.servlets.author.EditAuthor</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>EditAuthor</servlet-name>
-        <url-pattern>/library/edit/author</url-pattern>
+        <url-pattern>/library/update/author</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GetAuthor</servlet-name>
+        <servlet-class>com.library.servlets.author.GetAuthor</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetAuthor</servlet-name>
+        <url-pattern>/library/author/fullName</url-pattern>
     </servlet-mapping>
 
     <filter>
         <filter-name>AddHeaders</filter-name>
-        <filter-class>com.library.servlets.Filter</filter-class>
+        <filter-class>com.library.servlets.filters.InitialFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AddHeaders</filter-name>
         <url-pattern>/library</url-pattern>
     </filter-mapping>
+
+<!--    <filter>-->
+<!--        <filter-name>ErrorPage</filter-name>-->
+<!--        <filter-class>com.library.servlets.filters.InitialFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>ErrorPage</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
 </web-app>

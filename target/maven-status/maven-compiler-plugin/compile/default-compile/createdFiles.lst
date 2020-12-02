@@ -1,9 +1,6 @@
-com\library\servlets\HomePage.class
-com\library\servlets\InsertingAuthor.class
-com\library\db\DBConnection.class
 com\library\author\Author.class
 com\library\author\Person.class
 com\library\book\Book.class
-com\library\servlets\DeleteAuthor.class
 com\library\author\Address.class
 com\library\servlets\MainPage.class
+com\library\db\DBConnectionMSSQL.class

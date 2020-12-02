@@ -2,9 +2,7 @@ package com.library.author;
 
 import com.library.book.Book;
 import com.library.db.DBConnectionMSSQL;
-import com.library.db.DBConnectionMySQL;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 
 public final class Author extends Person implements Cloneable {
     private Map<Integer, Book> books;
-//    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
+    //    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
     private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
     public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) throws SQLException {

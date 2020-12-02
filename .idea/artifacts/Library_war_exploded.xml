@@ -14,7 +14,6 @@
           <element id="module-output" name="Library" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: com.microsoft.sqlserver:mssql-jdbc:9.1.0.jre8-preview" />
           <element id="library" level="project" name="Maven: javax.json:javax.json-api:1.1.4" />
         </element>
       </element>

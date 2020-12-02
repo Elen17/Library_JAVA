@@ -4,18 +4,15 @@ import com.library.author.Address;
 import com.library.author.Author;
 import com.library.book.Book;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
-import com.sun.scenario.effect.impl.prism.PrImage;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //import com.mysql.jdbc.Driver;
 
@@ -81,7 +78,7 @@ public final class DBConnectionMSSQL {
             "     WHERE AUTHOR.AUTHOR_ID = ?) " +
             "     DELETE FROM AUTHOR WHERE AUTHOR_ID = ?  ";
 
-    private static final String GET_AUTHORS_NAMES = "SELECT NAME FROM AUTHOR";
+    private static final String GET_AUTHORS_NAMES = "SELECT AUTHOR_ID as id,  NAME FROM AUTHOR";
 
     public static DBConnectionMSSQL getInstance() {
 
@@ -109,11 +106,11 @@ public final class DBConnectionMSSQL {
 //            url = prop.getProperty("url");
 //            userName = prop.getProperty("user");
 //            password = prop.getProperty("password");
-        url = "jdbc:sqlserver://localhost:1433;databaseName=Library";
-        userName = "lib_login";
-        password = "password";
+            url = "jdbc:sqlserver://localhost:1433;databaseName=Library";
+            userName = "lib_login";
+            password = "password";
 //
-        } catch ( SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -226,12 +223,12 @@ public final class DBConnectionMSSQL {
         return deleteAuthor.executeUpdate() == 1;
     }
 
-    public List<String> getAuthorsNames() throws SQLException {
+    public Map<Integer, String> getAuthorsNames() throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(GET_AUTHORS_NAMES);
-        List<String> names = new ArrayList<>();
+        Map<Integer, String> names = new HashMap<>();
         while (result.next()) {
-            names.add(result.getString(1));
+            names.put(result.getInt(1), result.getString(2));
         }
         return names;
 

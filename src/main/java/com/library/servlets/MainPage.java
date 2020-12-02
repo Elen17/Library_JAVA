@@ -4,7 +4,6 @@ package com.library.servlets;
 import com.google.gson.Gson;
 import com.library.author.Author;
 import com.library.db.DBConnectionMSSQL;
-import com.library.db.DBConnectionMySQL;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
