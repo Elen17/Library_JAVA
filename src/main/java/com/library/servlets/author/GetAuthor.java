@@ -8,8 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Arrays;
 
 public class GetAuthor extends HttpServlet {
     @Override
@@ -23,7 +24,14 @@ public class GetAuthor extends HttpServlet {
                     break;
                 }
                 case "name": {
-                    resp.getWriter().write(gson.toJson(DBConnectionMSSQL.getInstance().getAuthorsByName(req.getParameter("param"))));
+                    String[] fullName = req.getParameter("param").split("\\s+");
+                    System.out.println(Arrays.toString(fullName));
+                    resp.getWriter().write(gson.toJson(DBConnectionMSSQL.getInstance().getAuthorsByFullName(fullName[0].trim(), fullName[1].trim())));
+                    break;
+                }
+                case "all":{
+                    resp.getWriter().write(gson.toJson(DBConnectionMSSQL.getInstance().getAllAuthors()));
+                    break;
                 }
                 default: {
                     break;

@@ -15,10 +15,8 @@ import java.util.Scanner;
 public class InsertingAuthor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.addHeader("Access-Control-Allow-Origin", "*");
-//        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        try {
 
+        try {
             StringBuilder content = new StringBuilder();
             try (Scanner in = new Scanner(req.getInputStream())) {
                 while (in.hasNext()) {
@@ -26,17 +24,10 @@ public class InsertingAuthor extends HttpServlet {
                 }
             }
             Gson gson = new Gson();
-
+            System.out.println(content.toString());
             System.out.println(gson.fromJson(content.toString(), Author.class));
             Author author = gson.fromJson(content.toString(), Author.class);
-//            System.out.println("Converting to Author");
-//            System.out.println(author.getAddress().getCountry());
-//            boolean succeed = DBConnectionMySQL.getInstance().insertAuthor(author);
-//            boolean succeed = DBConnectionMSSQL.getInstance().insertAuthor(author);
-//            System.out.println(succeed);
-
-            resp.getWriter().write(DBConnectionMSSQL.getInstance().insertAuthor(author)+"");
-
+            resp.getWriter().print(DBConnectionMSSQL.getInstance().insertAuthor(author));
         } catch (SQLException e) {
             e.printStackTrace();
         }

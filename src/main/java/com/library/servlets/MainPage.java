@@ -22,10 +22,10 @@ public class MainPage extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //        resp.addHeader("Access-Control-Allow-Origin", "*");
 //        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-        String name = req.getParameter("query");
+        String[] fullName = req.getParameter("query").split("\\s+");
         Map<Integer, Author> authors = new HashMap<>();
         try {
-            authors = DBConnectionMSSQL.getInstance().getAuthorsByName(name);// work:
+            authors = DBConnectionMSSQL.getInstance().getAuthorsByFullName(fullName[0],fullName[1]);// work:
         } catch (SQLException e) {
             e.printStackTrace();
         }

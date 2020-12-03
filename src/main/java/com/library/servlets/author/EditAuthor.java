@@ -22,14 +22,13 @@ public class EditAuthor extends HttpServlet {
         while (in.hasNextLine()) {
             builder.append(in.nextLine());
         }
-
         try {
-//           System.out.println(builder.toString());
             Gson gson = new Gson();
             Author author = gson.fromJson(builder.toString(), Author.class);
             System.out.println("Author: " + author);
-
-            resp.getWriter().write(DBConnectionMSSQL.getInstance().updateAuthor(author));
+            int result = DBConnectionMSSQL.getInstance().updateAuthor(author);
+            System.out.println(result + " query result");
+            resp.getWriter().print(result);
 
         } catch (SQLException e) {
             e.printStackTrace();

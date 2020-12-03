@@ -67,7 +67,7 @@ public final class DBConnectionMSSQL {
             "where B.BOOK_ID = ? ";
 
     private static final String GET_AUTHOR_NAME = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as country, BIRTH_CITY as city " +
-            " from AUTHOR where [name] = ?";
+            " from AUTHOR where [name] = ? AND [surname] = ?";
     private static final String GET_BOOK_TITLE = "select B.BOOK_ID as id, B.TITLE as title, a.NAME as name, a.SURNAME as sname, b.PAGE_COUNT as page, b.COUNTRY as country, b.BOOK_YEAR as year FROM BOOK WHERE TITLE = ? ";
 
     private static final String INSERT_AUTHOR = "INSERT INTO AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
@@ -151,9 +151,11 @@ public final class DBConnectionMSSQL {
         return null;
     }
 
-    public Map<Integer, Author> getAuthorsByName(String name) throws SQLException {
+    public Map<Integer, Author> getAuthorsByFullName(String name, String surname) throws SQLException {
         getAuthorByName = createPrepStatement(getAuthorByName, GET_AUTHOR_NAME);
+
         getAuthorByName.setString(1, name);
+        getAuthorByName.setString(2, surname);
 
 
         ResultSet result = getAuthorByName.executeQuery();
@@ -230,6 +232,7 @@ public final class DBConnectionMSSQL {
         while (result.next()) {
             names.put(result.getInt(1), result.getString(2) + " " +result.getString(3));
         }
+        System.out.println(names);
         return names;
 
     }
