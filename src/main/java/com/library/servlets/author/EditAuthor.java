@@ -15,8 +15,6 @@ import java.util.Scanner;
 public class EditAuthor extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.addHeader("Access-Control-Allow-Origin", "*");
-//        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
         StringBuilder builder = new StringBuilder();
         Scanner in = new Scanner(req.getInputStream());
         while (in.hasNextLine()) {
@@ -37,7 +35,5 @@ public class EditAuthor extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.addHeader("Access-Control-Allow-Origin", "*");
-//        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
     }
 }

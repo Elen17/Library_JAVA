@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//import com.mysql.jdbc.Driver;
-
 public final class DBConnectionMSSQL {
     private static Connection connection;
     private static final Path path = Paths.get("connection.properties");
@@ -99,7 +97,7 @@ public final class DBConnectionMSSQL {
     private static void setConnectionUrl() {
         try {
 //        (InputStream in = new FileInputStream("src\\main\\resources\\connection.properties")) {
-//            System.out.println("Inside properties.");
+//            ies.");
             SQLServerDriver.register();
 //            Properties prop = new Properties();
 //            prop.load(in);
@@ -142,7 +140,6 @@ public final class DBConnectionMSSQL {
         if (result.next()) {
             LocalDate birthDate = result.getDate("bd").toLocalDate();
             Date deathDate = result.getDate("dy");
-            System.out.println("Result:  " + result);
             return new Author(result.getInt("id"), result.getString("name"), result.getString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
                     new Address(result.getString("country"), result.getString("city")));
@@ -163,7 +160,6 @@ public final class DBConnectionMSSQL {
         while (result.next()) {
             LocalDate birthDate = result.getDate("bd").toLocalDate();
             Date deathDate = result.getDate("dy");
-            System.out.println("Result:  " + result);
             int id = result.getInt("id");
             authors.put(id, new Author(id, result.getNString("name"), result.getNString("surname"),
                     birthDate, deathDate != null ? deathDate.toLocalDate() : null,
@@ -171,8 +167,7 @@ public final class DBConnectionMSSQL {
 
         }
 
-        System.out.println(authors);
-        return authors;
+           return authors;
     }
 
     public Book getBookById(int id) throws SQLException {
@@ -232,8 +227,7 @@ public final class DBConnectionMSSQL {
         while (result.next()) {
             names.put(result.getInt(1), result.getString(2) + " " +result.getString(3));
         }
-        System.out.println(names);
-        return names;
+         return names;
 
     }
 
@@ -247,8 +241,6 @@ public final class DBConnectionMSSQL {
                     (authors.getDate("death") != null ? authors.getDate("death").toLocalDate() : null),
                     new Address(authors.getString("country"), authors.getString("city"))));
         }
-
-        System.out.println("Result: " + result);
         return result;
     }
 

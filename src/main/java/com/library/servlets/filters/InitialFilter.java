@@ -31,6 +31,5 @@ public class InitialFilter extends HttpFilter {
 
     @Override
     public void destroy() {
-
     }
 }

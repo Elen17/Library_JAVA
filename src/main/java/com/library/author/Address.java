@@ -11,8 +11,8 @@ public final class Address {
     private final String city;
 
     public Address(String country, String city) {
-        this.country = splitNames(country);
-        this.city = splitNames(city);
+        this.country = country;
+        this.city = (city);
     }
 
     public String getCountry() {
@@ -29,20 +29,20 @@ public final class Address {
 
         return address;
     }
-
-    private String splitNames(String input) {
-        String[] capitalLetters = input.split("[a-z]+"); // [firstMatch, secondMatch ... ""]
-        String[] words = input.split("[A-Z]"); // ["", firstMatch, secondMatch]
-
-        if (words.length == 0 || words.length == 1) {
-            return input;
-        }
-        StringBuilder builder = new StringBuilder();
-        byte index = 0;
-        while (index != capitalLetters.length) {
-            builder.append(capitalLetters[index]).append(words[index + 1]).append(" ");
-            ++index;
-        }
-        return builder.toString();
-    }
+//
+//    private String splitNames(String input) {
+//        String[] capitalLetters = input.split("[a-z]+"); // [firstMatch, secondMatch ... ""]
+//        String[] words = input.split("[A-Z]"); // ["", firstMatch, secondMatch]
+//
+//        if (words.length == 0 || words.length == 1) {
+//            return input;
+//        }
+//        StringBuilder builder = new StringBuilder();
+//        byte index = 0;
+//        while (index != capitalLetters.length) {
+//            builder.append(capitalLetters[index]).append(words[index + 1]).append(" ");
+//            ++index;
+//        }
+//        return builder.toString();
+//    }
 }
