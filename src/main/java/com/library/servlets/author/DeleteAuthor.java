@@ -17,7 +17,7 @@ public class DeleteAuthor extends HttpServlet {
 
         try {
             int id = Integer.parseInt(req.getParameter("id"));
-            System.out.println(DBConnectionMSSQL.getInstance().deleteAuthor(id));
+            resp.getWriter().write(DBConnectionMSSQL.getInstance().deleteAuthor(id)+"");
 //            System.out.println(DBConnectionMySQL.getInstance().deleteAuthor(id));
 
         }catch (SQLException e){

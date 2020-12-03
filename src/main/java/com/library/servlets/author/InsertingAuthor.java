@@ -29,11 +29,13 @@ public class InsertingAuthor extends HttpServlet {
 
             System.out.println(gson.fromJson(content.toString(), Author.class));
             Author author = gson.fromJson(content.toString(), Author.class);
-            System.out.println("Converting to Author");
-            System.out.println(author.getAddress().getCountry());
+//            System.out.println("Converting to Author");
+//            System.out.println(author.getAddress().getCountry());
 //            boolean succeed = DBConnectionMySQL.getInstance().insertAuthor(author);
-            boolean succeed = DBConnectionMSSQL.getInstance().insertAuthor(author);
-            System.out.println(succeed);
+//            boolean succeed = DBConnectionMSSQL.getInstance().insertAuthor(author);
+//            System.out.println(succeed);
+
+            resp.getWriter().write(DBConnectionMSSQL.getInstance().insertAuthor(author)+"");
 
         } catch (SQLException e) {
             e.printStackTrace();

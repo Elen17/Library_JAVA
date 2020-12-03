@@ -29,7 +29,7 @@ public class EditAuthor extends HttpServlet {
             Author author = gson.fromJson(builder.toString(), Author.class);
             System.out.println("Author: " + author);
 
-            System.out.println(DBConnectionMSSQL.getInstance().updateAuthor(author));
+            resp.getWriter().write(DBConnectionMSSQL.getInstance().updateAuthor(author));
 
         } catch (SQLException e) {
             e.printStackTrace();

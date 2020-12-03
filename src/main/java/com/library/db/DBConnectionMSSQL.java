@@ -78,7 +78,7 @@ public final class DBConnectionMSSQL {
             "     WHERE AUTHOR.AUTHOR_ID = ?) " +
             "     DELETE FROM AUTHOR WHERE AUTHOR_ID = ?  ";
 
-    private static final String GET_AUTHORS_NAMES = "SELECT AUTHOR_ID as id,  NAME FROM AUTHOR";
+    private static final String GET_AUTHORS_NAMES = "SELECT AUTHOR_ID as id,  NAME, SURNAME FROM AUTHOR";
 
     public static DBConnectionMSSQL getInstance() {
 
@@ -228,7 +228,7 @@ public final class DBConnectionMSSQL {
         ResultSet result = statement.executeQuery(GET_AUTHORS_NAMES);
         Map<Integer, String> names = new HashMap<>();
         while (result.next()) {
-            names.put(result.getInt(1), result.getString(2));
+            names.put(result.getInt(1), result.getString(2) + " " +result.getString(3));
         }
         return names;
 

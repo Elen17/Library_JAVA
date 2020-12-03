@@ -18,16 +18,6 @@
         <servlet-name>Home</servlet-name>
         <url-pattern>/library</url-pattern>
     </servlet-mapping>
-
-
-<!--    <servlet>-->
-<!--        <servlet-name>Main</servlet-name>-->
-<!--        <servlet-class>com.library.servlets.MainPage</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>Main</servlet-name>-->
-<!--        <url-pattern>/library/author/*</url-pattern>-->
-<!--    </servlet-mapping>-->
     
     <servlet>
         <servlet-name>InsertAuthor</servlet-name>
@@ -62,7 +52,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>GetAuthor</servlet-name>
-        <url-pattern>/library/author/fullName</url-pattern>
+        <url-pattern>/library/read/author</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -71,7 +61,7 @@
     </filter>
     <filter-mapping>
         <filter-name>AddHeaders</filter-name>
-        <url-pattern>/library</url-pattern>
+        <url-pattern>/library/*</url-pattern>
     </filter-mapping>
 
 <!--    <filter>-->
