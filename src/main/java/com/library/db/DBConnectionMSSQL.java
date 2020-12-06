@@ -4,6 +4,7 @@ import com.library.author.Address;
 import com.library.author.Author;
 import com.library.book.Book;
 import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+import com.sun.org.apache.bcel.internal.generic.DCONST;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -200,7 +201,7 @@ public final class DBConnectionMSSQL {
 
     }
 
-    public boolean insertAuthor(Author author) throws SQLException {
+    public int insertAuthor(Author author) throws SQLException {
         insertAuthor = createPrepStatement(insertAuthor, INSERT_AUTHOR);
         insertAuthor.setNString(1, author.getName());
         insertAuthor.setNString(2, author.getSurname());
@@ -210,7 +211,13 @@ public final class DBConnectionMSSQL {
         insertAuthor.setString(6, author.getAddress().getCity());
 
         // TODO: 11/20/2020 add cascade delete
-        return insertAuthor.executeUpdate() == 1;
+        final boolean RESULT  = insertAuthor.executeUpdate() == 1;
+        ResultSet set = connection.createStatement().executeQuery("SELECT MAX(AUTHOR_ID) as MAX_ID FROM AUTHOR");
+        int id = -1;
+        if (set.next()){
+            id = set.getInt("MAX_ID");
+        }
+        return id;
     }
 
     public boolean deleteAuthor(int id) throws SQLException {
@@ -241,6 +248,7 @@ public final class DBConnectionMSSQL {
                     (authors.getDate("death") != null ? authors.getDate("death").toLocalDate() : null),
                     new Address(authors.getString("country"), authors.getString("city"))));
         }
+        System.out.println(result);
         return result;
     }
 
