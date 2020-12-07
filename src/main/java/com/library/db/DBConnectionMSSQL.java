@@ -22,21 +22,19 @@ public final class DBConnectionMSSQL {
     private static String password;
     private static DBConnectionMSSQL instance = null;
     private static PreparedStatement getAuthorByID;
-    private static PreparedStatement getBookByID;
     private static PreparedStatement getAuthorByName;
-    private static PreparedStatement getBookByTitle;
     private static PreparedStatement insertAuthor;
     private static PreparedStatement deleteAuthor;
     private static PreparedStatement updateAuthor;
-    private static PreparedStatement updateBook;
 
-    private static final String UPDATE_BOOK = "UPDATE BOOK " +
-            "SET TITLE = ?, " +
-            "    BOOK_YEAR = ? , " +
-            "    BOOK_INFO = ? , " +
-            "    COUNTRY = ? , " +
-            "    page_count = ? " +
-            "WHERE BOOK_ID = ?; ";
+    private static PreparedStatement getAllBooks;
+    private static PreparedStatement getBookByID;
+    private static PreparedStatement getBookByTitle;
+    private static PreparedStatement getBookByAuthor;
+    private static PreparedStatement updateBook;
+    private static PreparedStatement deleteBook;
+    private static PreparedStatement insertBook;
+
 
     private static final String UPDATE_AUTHOR = "UPDATE AUTHOR " +
             "SET NAME = ?, SURNAME = ? ,  BIRTH_DATE = ?, " +
@@ -44,10 +42,7 @@ public final class DBConnectionMSSQL {
             "BIRTH_COUNTRY = ?, " +
             "BIRTH_CITY = ?  " +
             "WHERE AUTHOR_ID = ?;";
-    private static final String GET_ALL_BOOKS = "select b.BOOK_ID, b.TITLE, " +
-            "b.BOOK_YEAR as year, b.COUNTRY, b.page_count, a.NAME as name, a.SURNAME as sname " +
-            " from book as b inner join BOOK_AUTHORS as ba " +
-            "    on b.BOOK_ID = ba.BOOK_ID inner join AUTHOR A on ba.AUTHOR_ID = A.AUTHOR_ID ";
+
     private static final String GET_ALL_AUTHORS = "SELECT AUTHOR_ID as ID, " +
             "NAME, " +
             "SURNAME, " +
@@ -55,28 +50,70 @@ public final class DBConnectionMSSQL {
             "DEATH_YEAR AS DEATH, " +
             "BIRTH_COUNTRY AS COUNTRY, " +
             "BIRTH_CITY AS CITY FROM AUTHOR ";
-    private static final String GET_AUTHOR = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as coutry, BIRTH_CITY as city\n" +
-            "from AUTHOR where author_id = ? ";
 
-    private static final String GET_BOOK = "select B.BOOK_ID as id, B.TITLE as title, a.NAME as name, a.SURNAME as sname, b.PAGE_COUNT as page, b.COUNTRY as country, b.BOOK_YEAR as year " +
-            "from BOOK as B " +
-            "         inner join BOOK_AUTHORS as BA on B.BOOK_ID = BA.BOOK_ID" +
-            "         inner join AUTHOR A on BA.AUTHOR_ID = A.AUTHOR_ID " +
-            "where B.BOOK_ID = ? ";
+    private static final String GET_AUTHOR = "SELECT AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as coutry, BIRTH_CITY as city " +
+            "FROM AUTHOR WHERE author_id = ? ";
 
-    private static final String GET_AUTHOR_NAME = "select AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as country, BIRTH_CITY as city " +
-            " from AUTHOR where [name] = ? AND [surname] = ?";
-    private static final String GET_BOOK_TITLE = "select B.BOOK_ID as id, B.TITLE as title, a.NAME as name, a.SURNAME as sname, b.PAGE_COUNT as page, b.COUNTRY as country, b.BOOK_YEAR as year FROM BOOK WHERE TITLE = ? ";
+    private static final String GET_AUTHOR_BY_NAME = "SELECT AUTHOR_ID as id, NAME, SURNAME, BIRTH_DATE as bd, DEATH_YEAR as dy, BIRTH_COUNTRY as country, BIRTH_CITY as city " +
+            " FROM AUTHOR WHERE [name] = ? AND [surname] = ?";
 
     private static final String INSERT_AUTHOR = "INSERT INTO AUTHOR (NAME, SURNAME, BIRTH_DATE, DEATH_YEAR, BIRTH_COUNTRY, BIRTH_CITY) VALUES ( ?, ?, ?, ?, ?, ? )";
 
-    private static final String DELETE_AUTHOR = "DELETE  FROM BOOK " +
-            "   WHERE BOOK_ID IN (SELECT BOOK_AUTHORS.BOOK_ID " +
-            "        FROM AUTHOR INNER JOIN BOOK_AUTHORS ON AUTHOR.AUTHOR_ID = BOOK_AUTHORS.AUTHOR_ID " +
-            "     WHERE AUTHOR.AUTHOR_ID = ?) " +
-            "     DELETE FROM AUTHOR WHERE AUTHOR_ID = ?  ";
+    private static final String DELETE_AUTHOR = " DELETE FROM AUTHOR WHERE AUTHOR_ID = ? ";
 
-    private static final String GET_AUTHORS_NAMES = "SELECT AUTHOR_ID as id,  NAME, SURNAME FROM AUTHOR";
+    private static final String GET_AUTHORS_NAMES = "SELECT AUTHOR_ID as id,  (NAME + ' ' + SURNAME) AS FULLNAME FROM AUTHOR";
+
+
+    private static final String GET_ALL_BOOKS = "SELECT B.BOOK_ID AS ID, B.TITLE AS TITLE, B.BOOK_YEAR AS year, B.COUNTRY , B.page_count, (A.NAME + ' ' + A.SURNAME) AS NAME, B.AUTHOR_ID AS AUTHOR" +
+            " FROM BOOK as B " +
+            "         INNER JOIN AUTHOR A ON B.AUTHOR_ID = A.AUTHOR_ID";
+
+
+    private static final String GET_BOOK = "SELECT B.BOOK_ID AS id," +
+            "       B.TITLE                    AS title," +
+            "       (A.NAME + ' ' + A.SURNAME) AS NAME," +
+            "       B.PAGE_COUNT               AS page," +
+            "       B.COUNTRY                  AS country," +
+            "       B.BOOK_YEAR                AS year" +
+            "       B.AUTHOR_ID                AS AUTHOR " +
+            " FROM BOOK AS B" +
+            "         INNER JOIN AUTHOR A ON B.AUTHOR_ID = A.AUTHOR_ID " +
+            " WHERE B.BOOK_ID = ?";
+
+
+    private static final String GET_BOOK_BY_TITLE = "SELECT " +
+            "       B.BOOK_ID                  AS id," +
+            "       B.TITLE                    AS title," +
+            "       (a.NAME + ' ' + a.SURNAME) AS NAME," +
+            "       b.PAGE_COUNT               AS page," +
+            "       b.COUNTRY                  AS country," +
+            "       b.BOOK_YEAR                AS year," +
+            "       b.AUTHOR_ID                AS AUTHOR" +
+            "   FROM BOOK AS B" +
+            "         INNER JOIN AUTHOR AS A ON B.AUTHOR_ID = A.AUTHOR_ID" +
+            "   WHERE TITLE = ?";
+
+    private static final String GET_BOOKS_BY_AUTHOR = "SELECT B.BOOK_ID  AS id, " +
+            "       B.TITLE                    AS title, " +
+            "       (a.NAME + ' ' + a.SURNAME) AS NAME, " +
+            "       b.PAGE_COUNT               AS page, " +
+            "       b.COUNTRY                  AS country, " +
+            "       b.BOOK_YEAR                AS year" +
+            "FROM BOOK AS B " +
+            "         INNER JOIN AUTHOR A ON B.AUTHOR_ID = A.AUTHOR_ID " +
+            "WHERE B.AUTHOR_ID = ?";
+    private static final String UPDATE_BOOK = "UPDATE BOOK " +
+            "SET TITLE = ?, " +
+            "    BOOK_YEAR = ? , " +
+            "    BOOK_INFO = ? , " +
+            "    COUNTRY = ? , " +
+            "    page_count = ? " +
+            "    AUTHOR_ID = ?  " +
+            "WHERE BOOK_ID = ?; ";
+
+    private static final String DELETE_BOOK = "DELETE FROM BOOK WHERE BOOK_ID = ?";
+    private static final String INSERT_BOOK = "INSERT INTO BOOK(TITLE, PAGE_COUNT, COUNTRY, YEAR, AUTHOR_ID) " +
+            "VALUES(?, ?, ?, ?, ?)";
 
     public static DBConnectionMSSQL getInstance() {
 
@@ -149,7 +186,7 @@ public final class DBConnectionMSSQL {
     }
 
     public Map<Integer, Author> getAuthorsByFullName(String name, String surname) throws SQLException {
-        getAuthorByName = createPrepStatement(getAuthorByName, GET_AUTHOR_NAME);
+        getAuthorByName = createPrepStatement(getAuthorByName, GET_AUTHOR_BY_NAME);
 
         getAuthorByName.setString(1, name);
         getAuthorByName.setString(2, surname);
@@ -167,37 +204,7 @@ public final class DBConnectionMSSQL {
 
         }
 
-           return authors;
-    }
-
-    public Book getBookById(int id) throws SQLException {
-        getBookByID = createPrepStatement(getBookByID, GET_BOOK);
-        getBookByID.setInt(1, id);
-        ResultSet result = getBookByID.executeQuery();
-        if (result.next()) {
-
-            return new Book(result.getInt("id"), result.getString("title"),
-                    result.getString("name") + " " + result.getString("sname"),
-                    result.getShort("page"), result.getString("country"),
-                    result.getShort("year"));
-        }
-        return null;
-    }
-
-    public Map<Integer, Book> getBooksByTitle(String title) throws SQLException {
-        Map<Integer, Book> books = new HashMap<>();
-        getBookByTitle = createPrepStatement(getBookByTitle, GET_BOOK_TITLE);
-        getBookByTitle.setString(1, title);
-        ResultSet result = getBookByID.executeQuery();
-        while (result.next()) {
-            int id = result.getInt("id");
-            books.put(id, new Book(id, result.getString("title"),
-                    result.getString("name") + " " + result.getString("sname"),
-                    result.getShort("page"), result.getString("country"),
-                    result.getShort("year")));
-        }
-        return books;
-
+        return authors;
     }
 
     public boolean insertAuthor(Author author) throws SQLException {
@@ -209,8 +216,20 @@ public final class DBConnectionMSSQL {
         insertAuthor.setString(5, author.getAddress().getCountry());
         insertAuthor.setString(6, author.getAddress().getCity());
 
-        // TODO: 11/20/2020 add cascade delete
         return insertAuthor.executeUpdate() == 1;
+    }
+
+
+    public int updateAuthor(Author author) throws SQLException {
+        updateAuthor = createPrepStatement(updateAuthor, UPDATE_AUTHOR);
+        updateAuthor.setNString(1, author.getName());//name
+        updateAuthor.setNString(2, author.getSurname());//name
+        updateAuthor.setDate(3, Date.valueOf(author.getBirthDate()));//name
+        updateAuthor.setDate(4, author.getDeathDate() != null ? Date.valueOf(author.getDeathDate()) : null);//name
+        updateAuthor.setNString(5, author.getAddress().getCountry());//name
+        updateAuthor.setNString(6, author.getAddress().getCity());//name
+        updateAuthor.setInt(7, author.getId());//name
+        return updateAuthor.executeUpdate();
     }
 
     public boolean deleteAuthor(int id) throws SQLException {
@@ -225,9 +244,9 @@ public final class DBConnectionMSSQL {
         ResultSet result = statement.executeQuery(GET_AUTHORS_NAMES);
         Map<Integer, String> names = new HashMap<>();
         while (result.next()) {
-            names.put(result.getInt(1), result.getString(2) + " " +result.getString(3));
+            names.put(result.getInt(1), result.getString("FULLNAME"));
         }
-         return names;
+        return names;
 
     }
 
@@ -244,30 +263,65 @@ public final class DBConnectionMSSQL {
         return result;
     }
 
-    public List<Book> getAllBooks() throws SQLException {
-        List<Book> result = new ArrayList<>();
-        Statement getBooks = connection.createStatement();
-        ResultSet books = getBooks.executeQuery(GET_ALL_BOOKS);
+    public Map<Integer, Book> getAllBooks() throws SQLException {
+        Map<Integer, Book> result = new HashMap<>();
+        final Statement getAllBooks = connection.createStatement();
+        ResultSet books = getAllBooks.executeQuery(GET_ALL_BOOKS);
         while (books.next()) {
-            result.add(new Book(books.getInt("ID"), books.getString("title"),
-                    books.getNString("name") + books.getNString("sname"),
+            int id = books.getInt("ID");
+            result.put(id, new Book(id, books.getString("title"),
+                    books.getInt("AUTHOR"),
+                    books.getNString("name"),
                     (short) books.getInt("page_count"),
                     books.getString("country"),
                     (short) books.getInt("year")));
         }
+        System.out.println("Books" + " " + result);
         return result;
     }
 
-    public int updateAuthor(Author author) throws SQLException {
-        updateAuthor = createPrepStatement(updateAuthor, UPDATE_AUTHOR);
-        updateAuthor.setNString(1, author.getName());//name
-        updateAuthor.setNString(2, author.getSurname());//name
-        updateAuthor.setDate(3, Date.valueOf(author.getBirthDate()));//name
-        updateAuthor.setDate(4, author.getDeathDate() != null ? Date.valueOf(author.getDeathDate()) : null);//name
-        updateAuthor.setNString(5, author.getAddress().getCountry());//name
-        updateAuthor.setNString(6, author.getAddress().getCity());//name
-        updateAuthor.setInt(7, author.getId());//name
-        return updateAuthor.executeUpdate();
+
+    public Book getBookById(int id) throws SQLException {
+        getBookByID = createPrepStatement(getBookByID, GET_BOOK);
+        getBookByID.setInt(1, id);
+        ResultSet result = getBookByID.executeQuery();
+        if (result.next()) {
+
+            return new Book(result.getInt("id"), result.getString("title"),
+                    result.getInt("AUTHOR"), result.getString("name"),
+                    result.getShort("page"), result.getString("country"),
+                    result.getShort("year"));
+        }
+        return null;
+    }
+
+    public Map<Integer, Book> getBooksByTitle(String title) throws SQLException {
+        Map<Integer, Book> books = new HashMap<>();
+        getBookByTitle = createPrepStatement(getBookByTitle, GET_BOOK_BY_TITLE);
+        getBookByTitle.setString(1, title);
+        ResultSet result = getBookByTitle.executeQuery();
+        while (result.next()) {
+            int id = result.getInt("id");
+            books.put(id, new Book(id, result.getString("title"),
+                    result.getInt("author"), result.getString("name"),
+                    result.getShort("page"), result.getString("country"),
+                    result.getShort("year")));
+        }
+        return books;
+    }
+
+    public Map<Integer, Book> getBooksByAuthor(int authorID) throws SQLException {
+        Map<Integer, Book> books = new HashMap<>();
+        getBookByAuthor = createPrepStatement(getBookByAuthor, GET_BOOKS_BY_AUTHOR);
+        getBookByAuthor.setInt(1, authorID);
+        ResultSet result = getBookByAuthor.executeQuery();
+        while (result.next()) {
+            int id = result.getInt("id");
+            books.put(id, new Book(id, result.getString("title"), result.getInt("author"),
+                    result.getNString("name"), (short) result.getInt("page_count"), result.getString("country"),
+                    (short) result.getInt("year")));
+        }
+        return books;
     }
 
     private PreparedStatement createPrepStatement(PreparedStatement statement, String sql) throws SQLException {

@@ -17,7 +17,12 @@ import java.util.Map;
 public class HomePage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("http://localhost:4200/library/main");
+//        resp.sendRedirect("http://localhost:4200/library/main");
+        try {
+            resp.getWriter().write(new Gson().toJson(DBConnectionMSSQL.getInstance().getAuthor(1)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -26,7 +26,7 @@ public class InitialFilter extends HttpFilter {
             return;
         }
 
-        resp.sendRedirect("http://localhost:4200/library/errorPage");
+        resp.sendRedirect("http://localhost:4200/library/errorPage?message=IllegalURL");
     }
 
     @Override
