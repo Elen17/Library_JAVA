@@ -27,7 +27,9 @@ public class InsertingAuthor extends HttpServlet {
             System.out.println(content.toString());
             System.out.println(gson.fromJson(content.toString(), Author.class));
             Author author = gson.fromJson(content.toString(), Author.class);
-            resp.getWriter().print(DBConnectionMSSQL.getInstance().insertAuthor(author));
+            int id = DBConnectionMSSQL.getInstance().insertAuthor(author);
+            System.out.println(id +  " -> ID");
+            resp.getWriter().print(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
