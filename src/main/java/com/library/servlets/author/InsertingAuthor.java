@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class InsertingAuthor extends HttpServlet {
+    DBConnectionMSSQL db = DBConnectionMSSQL.getInstance();
+    private final String GET_LAST_ID = "SELECT MAX(AUTHOR_ID) AS MAX FROM AUTHOR";
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -27,9 +30,14 @@ public class InsertingAuthor extends HttpServlet {
             System.out.println(content.toString());
             System.out.println(gson.fromJson(content.toString(), Author.class));
             Author author = gson.fromJson(content.toString(), Author.class);
-            int id = DBConnectionMSSQL.getInstance().insertAuthor(author);
-            System.out.println(id +  " -> ID");
-            resp.getWriter().print(id);
+            int res = db.insertAuthor(author);
+            if(res > 0){
+                ResultSet result = db.passQuery(GET_LAST_ID);
+                while (result.next()){
+                    res = result.getInt("MAX");
+                }
+            }
+            resp.getWriter().print(res);
         } catch (SQLException e) {
             e.printStackTrace();
         }

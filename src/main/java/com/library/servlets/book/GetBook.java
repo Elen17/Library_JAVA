@@ -26,7 +26,9 @@ public class GetBook extends HttpServlet {
         try {
             switch (query) {
                 case "all": {
-                    resp.getWriter().write(gson.toJson(db.getAllBooks(), HashMap.class));
+                    String str = gson.toJson(db.getAllBooks(), HashMap.class);
+                    System.out.println(gson.toJson(db.getAllBooks(), HashMap.class));
+                    resp.getWriter().write(str);
                     break;
                 }
                 case "title": {

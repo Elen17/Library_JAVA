@@ -6,7 +6,7 @@ public final class Book implements Cloneable {
     private final int authorID;
     private final short pageCount;
     private final String country;
-    private final short publishedYear;
+    private final short year;
     private final String authorName;
 
     public Book(int bookID, String title, int authorID, String authorName, short pageCount, String country, short publishedYear) {
@@ -15,7 +15,7 @@ public final class Book implements Cloneable {
         this.authorID = authorID;
         this.pageCount = pageCount;
         this.country = country;
-        this.publishedYear = publishedYear;
+        this.year = publishedYear;
         this.authorName = authorName;
     }
 
@@ -35,8 +35,8 @@ public final class Book implements Cloneable {
         return country;
     }
 
-    public short getPublishedYear() {
-        return publishedYear;
+    public short getYear() {
+        return year;
     }
 
     public int getAuthorID() {
@@ -49,7 +49,7 @@ public final class Book implements Cloneable {
     }
 
     private static Book getClone(Book current) {
-        return new Book(current.getID(), current.getTitle(), current.getAuthorID(), current.getAuthorName(), current.getPageCount(), current.getCountry(), current.getPublishedYear());
+        return new Book(current.getID(), current.getTitle(), current.getAuthorID(), current.getAuthorName(), current.getPageCount(), current.getCountry(), current.getYear());
     }
 
 
@@ -58,10 +58,10 @@ public final class Book implements Cloneable {
         final StringBuilder sb = new StringBuilder("Book{");
         sb.append("bookID=").append(bookID);
         sb.append(", title='").append(title).append('\'');
-//        sb.append(", author=").append(author);
+        sb.append(", author=").append(authorID);
         sb.append(", pageCount=").append(pageCount);
         sb.append(", country='").append(country).append('\'');
-        sb.append(", publishedYear=").append(publishedYear);
+        sb.append(", year=").append(year);
         sb.append('}');
         return sb.toString();
     }

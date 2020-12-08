@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_4_0.xsd"
-           version="4.0">
+         version="4.0">
 
 
     <servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>com.library.servlets.main.HomePage</servlet-class>
     </servlet>
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>Home</servlet-name>-->
-<!--        <url-pattern>/library/*</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <!--    <servlet-mapping>-->
+    <!--        <servlet-name>Home</servlet-name>-->
+    <!--        <url-pattern>/library/*</url-pattern>-->
+    <!--    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/library</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>InsertAuthor</servlet-name>
         <servlet-class>com.library.servlets.author.InsertingAuthor</servlet-class>
@@ -45,7 +45,7 @@
         <servlet-name>EditAuthor</servlet-name>
         <url-pattern>/library/update/author</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>GetAuthor</servlet-name>
         <servlet-class>com.library.servlets.author.GetAuthor</servlet-class>
@@ -53,6 +53,42 @@
     <servlet-mapping>
         <servlet-name>GetAuthor</servlet-name>
         <url-pattern>/library/read/author</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetBook</servlet-name>
+        <servlet-class>com.library.servlets.book.GetBook</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetBook</servlet-name>
+        <url-pattern>/library/read/book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>InsertBook</servlet-name>
+        <servlet-class>com.library.servlets.book.InsertBook</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>InsertBook</servlet-name>
+        <url-pattern>/library/insert/book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteBook</servlet-name>
+        <servlet-class>com.library.servlets.book.DeleteBook</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteBook</servlet-name>
+        <url-pattern>/library/delete/book</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UpdateBook</servlet-name>
+        <servlet-class>com.library.servlets.book.UpdateBook</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateBook</servlet-name>
+        <url-pattern>/library/update/book</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -64,12 +100,12 @@
         <url-pattern>/library/*</url-pattern>
     </filter-mapping>
 
-<!--    <filter>-->
-<!--        <filter-name>ErrorPage</filter-name>-->
-<!--        <filter-class>com.library.servlets.filters.InitialFilter</filter-class>-->
-<!--    </filter>-->
-<!--    <filter-mapping>-->
-<!--        <filter-name>ErrorPage</filter-name>-->
-<!--        <url-pattern>/*</url-pattern>-->
-<!--    </filter-mapping>-->
+    <!--    <filter>-->
+    <!--        <filter-name>ErrorPage</filter-name>-->
+    <!--        <filter-class>com.library.servlets.filters.InitialFilter</filter-class>-->
+    <!--    </filter>-->
+    <!--    <filter-mapping>-->
+    <!--        <filter-name>ErrorPage</filter-name>-->
+    <!--        <url-pattern>/*</url-pattern>-->
+    <!--    </filter-mapping>-->
 </web-app>

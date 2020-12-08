@@ -112,7 +112,7 @@ public final class DBConnectionMSSQL {
             "WHERE BOOK_ID = ?; ";
 
     private static final String DELETE_BOOK = "DELETE FROM BOOK WHERE BOOK_ID = ?";
-    private static final String INSERT_BOOK = "INSERT INTO BOOK(TITLE, PAGE_COUNT, COUNTRY, YEAR, AUTHOR_ID) " +
+    private static final String INSERT_BOOK = "INSERT INTO BOOK(TITLE, PAGE_COUNT, COUNTRY,BOOK_YEAR , AUTHOR_ID) " +
             "VALUES(?, ?, ?, ?, ?)";
 
     public static DBConnectionMSSQL getInstance() {
@@ -207,7 +207,7 @@ public final class DBConnectionMSSQL {
         return authors;
     }
 
-    public boolean insertAuthor(Author author) throws SQLException {
+    public int insertAuthor(Author author) throws SQLException {
         insertAuthor = createPrepStatement(insertAuthor, INSERT_AUTHOR);
         insertAuthor.setNString(1, author.getName());
         insertAuthor.setNString(2, author.getSurname());
@@ -216,7 +216,7 @@ public final class DBConnectionMSSQL {
         insertAuthor.setString(5, author.getAddress().getCountry());
         insertAuthor.setString(6, author.getAddress().getCity());
 
-        return insertAuthor.executeUpdate() == 1;
+        return insertAuthor.executeUpdate();
     }
 
 
@@ -235,7 +235,6 @@ public final class DBConnectionMSSQL {
     public boolean deleteAuthor(int id) throws SQLException {
         deleteAuthor = createPrepStatement(deleteAuthor, DELETE_AUTHOR);
         deleteAuthor.setInt(1, id);
-        deleteAuthor.setInt(2, id);
         return deleteAuthor.executeUpdate() == 1;
     }
 
@@ -246,6 +245,8 @@ public final class DBConnectionMSSQL {
         while (result.next()) {
             names.put(result.getInt(1), result.getString("FULLNAME"));
         }
+
+        System.out.println(names + " -->");
         return names;
 
     }
@@ -322,6 +323,18 @@ public final class DBConnectionMSSQL {
                     (short) result.getInt("year")));
         }
         return books;
+    }
+
+    public int insertBook(Book book)throws SQLException{
+        insertBook = createPrepStatement(insertBook, INSERT_BOOK);
+//        INSERT INTO BOOK(TITLE, PAGE_COUNT, COUNTRY, YEAR, AUTHOR_ID) " +
+//        "VALUES(?, ?, ?, ?, ?)"
+        insertBook.setString(1, book.getTitle());
+        insertBook.setInt(2, book.getPageCount());
+        insertBook.setString(3, book.getCountry());
+        insertBook.setInt(4, book.getYear());
+        insertBook.setInt(5, book.getAuthorID());
+        return insertBook.executeUpdate();
     }
 
     private PreparedStatement createPrepStatement(PreparedStatement statement, String sql) throws SQLException {
