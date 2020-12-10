@@ -31,6 +31,7 @@ public class UpdateBook extends HttpServlet {
                     }
                 }
                 Book book = gson.fromJson(content.toString(), Book.class);
+                System.out.println("Book " + book);
                 int res = dbConnectionMSSQL.updateBook(book);
                 resp.getWriter().print(res > 0);
             }

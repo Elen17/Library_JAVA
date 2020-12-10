@@ -35,6 +35,8 @@ public final class DBConnectionMSSQL {
     private static PreparedStatement deleteBook;
     private static PreparedStatement insertBook;
 
+    private DBConnectionMSSQL() {
+    }
 
     private static final String UPDATE_AUTHOR = "UPDATE AUTHOR " +
             "SET NAME = ?, SURNAME = ? ,  BIRTH_DATE = ?, " +
@@ -106,7 +108,7 @@ public final class DBConnectionMSSQL {
             "SET TITLE = ?, " +
             "    BOOK_YEAR = ? , " +
             "    COUNTRY = ? , " +
-            "    page_count = ? " +
+            "    page_count = ?, " +
             "    AUTHOR_ID = ?  " +
             "WHERE BOOK_ID = ?; ";
 
@@ -324,7 +326,7 @@ public final class DBConnectionMSSQL {
         return books;
     }
 
-    public int insertBook(Book book)throws SQLException{
+    public int insertBook(Book book) throws SQLException {
         insertBook = createPrepStatement(insertBook, INSERT_BOOK);
         insertBook.setString(1, book.getTitle());
         insertBook.setInt(2, book.getPageCount());
@@ -339,19 +341,22 @@ public final class DBConnectionMSSQL {
     }
 
 
-    public int updateBook(Book book) throws SQLException{
-//        TITLE = ?, " +
-//            "    BOOK_YEAR = ? , " +
-//            "    COUNTRY = ? , " +
-//            "    page_count = ? " +
-//            "    AUTHOR_ID = ?  " +
+    public int updateBook(Book book) throws SQLException {
         updateBook = createPrepStatement(updateBook, UPDATE_BOOK);
         updateBook.setString(1, book.getTitle());
         updateBook.setInt(2, book.getYear());
         updateBook.setString(3, book.getCountry());
         updateBook.setInt(4, book.getPageCount());
         updateBook.setInt(5, book.getAuthorID());
+        updateBook.setInt(6, book.getID());
 
         return updateBook.executeUpdate();
+    }
+
+    public int deleteBook(int bookID) throws SQLException {
+        deleteBook = createPrepStatement(deleteBook, DELETE_BOOK);
+        deleteBook.setInt(1, bookID);
+        return deleteBook.executeUpdate();
+
     }
 }
