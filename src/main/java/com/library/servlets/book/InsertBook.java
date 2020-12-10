@@ -32,13 +32,15 @@ public class InsertBook extends HttpServlet {
         System.out.println("Book: " + book);
         try{
             int res = db.insertBook(book);
+            System.out.println("result" + res);
             if(res > 0){
                 ResultSet result = db.passQuery(GET_MAX_ID);
                 while (result.next()){
                     res = result.getInt("MAX");
                 }
             }
-            resp.getWriter().write(res);
+            System.out.println(res + " result");
+            resp.getWriter().print(res);
         }catch (SQLException e){
             e.printStackTrace();
         }

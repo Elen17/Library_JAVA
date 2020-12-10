@@ -105,7 +105,6 @@ public final class DBConnectionMSSQL {
     private static final String UPDATE_BOOK = "UPDATE BOOK " +
             "SET TITLE = ?, " +
             "    BOOK_YEAR = ? , " +
-            "    BOOK_INFO = ? , " +
             "    COUNTRY = ? , " +
             "    page_count = ? " +
             "    AUTHOR_ID = ?  " +
@@ -327,8 +326,6 @@ public final class DBConnectionMSSQL {
 
     public int insertBook(Book book)throws SQLException{
         insertBook = createPrepStatement(insertBook, INSERT_BOOK);
-//        INSERT INTO BOOK(TITLE, PAGE_COUNT, COUNTRY, YEAR, AUTHOR_ID) " +
-//        "VALUES(?, ?, ?, ?, ?)"
         insertBook.setString(1, book.getTitle());
         insertBook.setInt(2, book.getPageCount());
         insertBook.setString(3, book.getCountry());
@@ -342,4 +339,19 @@ public final class DBConnectionMSSQL {
     }
 
 
+    public int updateBook(Book book) throws SQLException{
+//        TITLE = ?, " +
+//            "    BOOK_YEAR = ? , " +
+//            "    COUNTRY = ? , " +
+//            "    page_count = ? " +
+//            "    AUTHOR_ID = ?  " +
+        updateBook = createPrepStatement(updateBook, UPDATE_BOOK);
+        updateBook.setString(1, book.getTitle());
+        updateBook.setInt(2, book.getYear());
+        updateBook.setString(3, book.getCountry());
+        updateBook.setInt(4, book.getPageCount());
+        updateBook.setInt(5, book.getAuthorID());
+
+        return updateBook.executeUpdate();
+    }
 }

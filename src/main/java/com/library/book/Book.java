@@ -58,7 +58,8 @@ public final class Book implements Cloneable {
         final StringBuilder sb = new StringBuilder("Book{");
         sb.append("bookID=").append(bookID);
         sb.append(", title='").append(title).append('\'');
-        sb.append(", author=").append(authorID);
+        sb.append(", authorID=").append(authorID);
+        sb.append(", authorName=").append(authorName);
         sb.append(", pageCount=").append(pageCount);
         sb.append(", country='").append(country).append('\'');
         sb.append(", year=").append(year);
