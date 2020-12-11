@@ -37,6 +37,7 @@ public class UpdateBook extends HttpServlet {
             }
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
+            resp.getWriter().print(false);
         }
     }
 }

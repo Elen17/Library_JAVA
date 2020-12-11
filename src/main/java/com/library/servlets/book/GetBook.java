@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -41,6 +42,15 @@ public class GetBook extends HttpServlet {
                 }
                 case "author": {
                     resp.getWriter().write(gson.toJson(gson.toJson(db.getBooksByAuthor(Integer.parseInt(param))), HashMap.class));
+                    break;
+                }
+                case "diff": {
+                    ResultSet result = db.passQuery("SELECT DATEPART(YEAR , BIRTH_DATE) - BOOK_YEAR " +
+                            "FROM BOOK INNER JOIN AUTHOR A on BOOK.author_id = A.AUTHOR_ID " +
+                            "WHERE BOOK_ID = " + Integer.parseInt(param));
+                    if (result.next()) {
+                        resp.getWriter().print(result.getInt(1));
+                    }
                 }
             }
         } catch (SQLException e) {
