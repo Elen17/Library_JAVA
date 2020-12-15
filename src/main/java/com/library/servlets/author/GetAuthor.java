@@ -26,7 +26,9 @@ public class GetAuthor extends HttpServlet {
                 case "name": {
                     String[] fullName = req.getParameter("param").split("\\s+");
                     System.out.println(Arrays.toString(fullName));
-                    resp.getWriter().write(gson.toJson(DBConnectionMSSQL.getInstance().getAuthorsByFullName(fullName[0].trim(), fullName[1].trim())));
+                    String json = gson.toJson(DBConnectionMSSQL.getInstance().getAuthorsByFullName(fullName[0].trim(), fullName[1].trim()));
+                    System.out.println(json);
+                    resp.getWriter().write(json);
                     break;
                 }
                 case "all":{
@@ -42,6 +44,5 @@ public class GetAuthor extends HttpServlet {
             e.printStackTrace();
         }
         System.out.println(req.getParameter("param") + req.getParameter("query"));
-
     }
 }

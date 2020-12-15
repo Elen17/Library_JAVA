@@ -17,16 +17,20 @@ public abstract class Person implements Comparable<Person> {
     private final int id;
     private final String name;
     private final String surname;
-    private final LocalDate birthDate;
-    private final LocalDate deathDate;//can be null
-    private final Address address;//not null, immutable
+    private final long birthDate;
+    private final Long deathDate;//can be null
+    private final String country;//not null, immutable
+    private final String city;//not null, immutable
 
-    public Person(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) {
+    public Person(int id, String name, String surname, long birthDate, Long deathDate, String country, String city) {
         this.name = Objects.requireNonNull(name);
         this.surname = Objects.requireNonNull(surname);
-        this.birthDate = Objects.requireNonNull(birthDate);
+        this.birthDate = birthDate;
         this.deathDate = deathDate;
-        this.address = Objects.requireNonNull(address);
+//        this.country = Objects.requireNonNull(country);
+//        this.city = Objects.requireNonNull(city);
+        this.country = country;
+        this.city = city;
         this.id = id;
     }
 
@@ -39,7 +43,8 @@ public abstract class Person implements Comparable<Person> {
     }
 
     public int getAge() {
-        return this.deathDate == null ? calculateAge(birthDate, LocalDate.now()) : calculateAge(birthDate, deathDate);
+        return this.deathDate == null ? calculateAge(new Date(birthDate).toLocalDate(), LocalDate.now()) : calculateAge(new Date(birthDate).toLocalDate(),
+                new Date(deathDate).toLocalDate());
     }
 
     public String getName() {
@@ -50,16 +55,20 @@ public abstract class Person implements Comparable<Person> {
         return surname;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
+    public Date getBirthDate() {
+        return new Date(this.birthDate);
     }
 
-    public LocalDate getDeathDate() {
-        return deathDate;
+    public Date getDeathDate() {
+        return this.deathDate == null ? null : new Date(this.deathDate);
     }
 
-    public Address getAddress() {
-        return address;
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public String getFullName() {
@@ -77,14 +86,15 @@ public abstract class Person implements Comparable<Person> {
         Person person = (Person) o;
         return name.equals(person.name) &&
                 surname.equals(person.surname) &&
-                birthDate.equals(person.birthDate) &&
+                birthDate == person.birthDate &&
                 Objects.equals(deathDate, person.deathDate) &&
-                address.equals(person.address);
+                country.equals(person.country) &&
+                city.equalsIgnoreCase(person.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, surname, birthDate, deathDate, address);
+        return Objects.hash(name, surname, birthDate, deathDate, country, city);
     }
 
     @Override
@@ -101,7 +111,8 @@ public abstract class Person implements Comparable<Person> {
                 ", surname='" + surname + '\'' +
                 ", birthDate=" + birthDate +
                 ", deathDate=" + deathDate +
-                ", address=" + address +
+                ", country=" + this.getCountry() +
+                ", city=" + this.getCity() +
                 '}';
     }
 

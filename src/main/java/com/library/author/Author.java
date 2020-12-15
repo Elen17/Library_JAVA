@@ -10,8 +10,8 @@ public final class Author extends Person implements Cloneable {
     //    private static DBConnectionMySQL connection = DBConnectionMySQL.getInstance();
     private static DBConnectionMSSQL connection = DBConnectionMSSQL.getInstance();
 
-    public Author(int id, String name, String surname, LocalDate birthDate, LocalDate deathDate, Address address) throws SQLException {
-        super(id, name, surname, birthDate, deathDate, address);
+    public Author(int id, String name, String surname, long birthDate, Long deathDate, String country, String city) throws SQLException {
+        super(id, name, surname, birthDate, deathDate, country, city);
 //        this.books = completeBooks();
     }
 
@@ -53,7 +53,8 @@ public final class Author extends Person implements Cloneable {
     private static Author cloneInstance(Author author) throws SQLException {
 //        Map<Integer, Book> books = author.getBooks().stream().collect(Collectors.toMap(Book::getID, book -> book)); //todo:  book -> book
         //        newAuthor.setBooks(books);
-        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate(), author.getDeathDate(), author.getAddress());
+        return new Author(author.getId(), author.getName(), author.getSurname(), author.getBirthDate().getTime(),
+                author.getDeathDate() == null ? null : author.getDeathDate().getTime(), author.getCountry(), author.getCity());
     }
 
 //    private Map<Integer, Book> completeBooks() throws SQLException {
@@ -75,9 +76,9 @@ public final class Author extends Person implements Cloneable {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Author{");
         sb.append(super.toString());
-        sb.append("Books{\n");
-//        this.books.forEach((integer, book) -> sb.append(book));
-        sb.append("}\n");
+//        sb.append("Books{\n");
+////        this.books.forEach((integer, book) -> sb.append(book));
+//        sb.append("}\n");
         sb.append('}');
         return sb.toString();
     }

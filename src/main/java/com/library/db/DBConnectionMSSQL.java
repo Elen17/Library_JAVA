@@ -71,14 +71,14 @@ public final class DBConnectionMSSQL {
             "         INNER JOIN AUTHOR A ON B.AUTHOR_ID = A.AUTHOR_ID";
 
 
-    private static final String GET_BOOK = "SELECT B.BOOK_ID AS id," +
+    private static final String GET_BOOK = "SELECT B.BOOK_ID AS id, " +
             "       B.TITLE                    AS title," +
             "       (A.NAME + ' ' + A.SURNAME) AS NAME," +
             "       B.PAGE_COUNT               AS page," +
             "       B.COUNTRY                  AS country," +
-            "       B.BOOK_YEAR                AS year" +
+            "       B.BOOK_YEAR                AS year," +
             "       B.AUTHOR_ID                AS AUTHOR " +
-            " FROM BOOK AS B" +
+            " FROM BOOK AS B " +
             "         INNER JOIN AUTHOR A ON B.AUTHOR_ID = A.AUTHOR_ID " +
             " WHERE B.BOOK_ID = ?";
 
@@ -176,11 +176,10 @@ public final class DBConnectionMSSQL {
         getAuthorByID.setInt(1, id);
         ResultSet result = getAuthorByID.executeQuery();
         if (result.next()) {
-            LocalDate birthDate = result.getDate("bd").toLocalDate();
             Date deathDate = result.getDate("dy");
             return new Author(result.getInt("id"), result.getString("name"), result.getString("surname"),
-                    birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    new Address(result.getString("country"), result.getString("city")));
+                    result.getDate("bd").getTime(), deathDate != null ? deathDate.getTime() : null,
+                    result.getString("country"), result.getString("city"));
 
         }
         return null;
@@ -196,12 +195,12 @@ public final class DBConnectionMSSQL {
         ResultSet result = getAuthorByName.executeQuery();
         Map<Integer, Author> authors = new HashMap<>();
         while (result.next()) {
-            LocalDate birthDate = result.getDate("bd").toLocalDate();
+//            LocalDate birthDate = result.getDate("bd").toLocalDate();
             Date deathDate = result.getDate("dy");
             int id = result.getInt("id");
             authors.put(id, new Author(id, result.getNString("name"), result.getNString("surname"),
-                    birthDate, deathDate != null ? deathDate.toLocalDate() : null,
-                    new Address(result.getString("country"), result.getString("city"))));
+                    result.getDate("bd").getTime(), deathDate != null ? deathDate.getTime() : null,
+                    result.getString("country"), result.getString("city")));
 
         }
 
@@ -212,10 +211,10 @@ public final class DBConnectionMSSQL {
         insertAuthor = createPrepStatement(insertAuthor, INSERT_AUTHOR);
         insertAuthor.setNString(1, author.getName());
         insertAuthor.setNString(2, author.getSurname());
-        insertAuthor.setDate(3, Date.valueOf(author.getBirthDate()));
-        insertAuthor.setDate(4, author.getDeathDate() == null ? null : Date.valueOf(author.getDeathDate()));
-        insertAuthor.setString(5, author.getAddress().getCountry());
-        insertAuthor.setString(6, author.getAddress().getCity());
+        insertAuthor.setDate(3, author.getBirthDate());
+        insertAuthor.setDate(4, author.getDeathDate());
+        insertAuthor.setString(5, author.getCountry());
+        insertAuthor.setString(6, author.getCity());
 
         return insertAuthor.executeUpdate();
     }
@@ -225,10 +224,10 @@ public final class DBConnectionMSSQL {
         updateAuthor = createPrepStatement(updateAuthor, UPDATE_AUTHOR);
         updateAuthor.setNString(1, author.getName());//name
         updateAuthor.setNString(2, author.getSurname());//name
-        updateAuthor.setDate(3, Date.valueOf(author.getBirthDate()));//name
-        updateAuthor.setDate(4, author.getDeathDate() != null ? Date.valueOf(author.getDeathDate()) : null);//name
-        updateAuthor.setNString(5, author.getAddress().getCountry());//name
-        updateAuthor.setNString(6, author.getAddress().getCity());//name
+        updateAuthor.setDate(3, author.getBirthDate());//name
+        updateAuthor.setDate(4, author.getDeathDate());//name
+        updateAuthor.setNString(5, author.getCountry());//name
+        updateAuthor.setNString(6, author.getCity());//name
         updateAuthor.setInt(7, author.getId());//name
         return updateAuthor.executeUpdate();
     }
@@ -258,9 +257,9 @@ public final class DBConnectionMSSQL {
         ResultSet authors = getAuthors.executeQuery(GET_ALL_AUTHORS);
         while (authors.next()) {
             result.add(new Author(authors.getInt("ID"), authors.getString("name"),
-                    authors.getString("surname"), authors.getDate("birth").toLocalDate(),
-                    (authors.getDate("death") != null ? authors.getDate("death").toLocalDate() : null),
-                    new Address(authors.getString("country"), authors.getString("city"))));
+                    authors.getString("surname"), authors.getDate("birth").getTime(),
+                    (authors.getDate("death") != null ? authors.getDate("death").getTime() : null),
+                    authors.getString("country"), authors.getString("city")));
         }
         return result;
     }
